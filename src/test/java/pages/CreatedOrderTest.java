@@ -11,10 +11,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import static org.hamcrest.CoreMatchers.startsWith;
+import static pages.constants.LocatorOrderButton.*;
 
 @RunWith(Parameterized.class)
 public class CreatedOrderTest {
     private WebDriver driver;
+
+    private final Enum placeOrderButton;
     private final String name;
     private final String secondname;
     private final String address;
@@ -24,7 +27,8 @@ public class CreatedOrderTest {
     private final String comment;
     private final String orderStatus;
 
-    public CreatedOrderTest(String name, String secondname, String address, String nameStation, String telephoneNumber, int dayRent, String comment, String orderStatus) {
+    public CreatedOrderTest(Enum placeOrderButton, String name, String secondname, String address, String nameStation, String telephoneNumber, int dayRent, String comment, String orderStatus) {
+        this.placeOrderButton = placeOrderButton;
         this.name = name;
         this.secondname = secondname;
         this.address = address;
@@ -50,11 +54,11 @@ public class CreatedOrderTest {
     @Parameterized.Parameters
     public static Object[][] getOrderDetails() {
         return new Object[][]{
-                {"Иван", "Иванов", "Москва, ул. Ломоносова, д. 16, кв.5", "Красносельская"
+                {BUTTON_ORDER_HEADER, "Иван", "Иванов", "Москва, ул. Ломоносова, д. 16, кв.5", "Красносельская"
                         , "89123456789", 12, "Саммокат оставить у подъезда", "Заказ оформлен"},
-                {"Петр", "Петров", "Пенза, ул. Московская, д. 60, кв.2", "Красносельская"
+                {BUTTON_ORDER_MIDDLE, "Петр", "Петров", "Пенза, ул. Московская, д. 60, кв.2", "Красносельская"
                         , "81111111111", 12, "Самокат должен быть чистым", "Заказ не оформлен"},
-                {"Ivan", "Ivanov", "Moscow, st. Lomonosova, h. 16. ap.5", "Чистые Пруды"
+                {BUTTON_ORDER_HEADER, "Ivan", "Ivanov", "Moscow, st. Lomonosova, h. 16. ap.5", "Чистые Пруды"
                         , "79999999999", 25, "Leave the scooter at the entrance", "Заказ оформлен"},
 
         };
@@ -66,7 +70,7 @@ public class CreatedOrderTest {
 
         MainPage objMainPage = new MainPage(driver);
         objMainPage.waitForLoadTitleHeader(); //ждем когда загрузится заголовок на главной странице
-        objMainPage.clickOrderButtonHeader(); //Нажимаем кнопку Заказать в шапке сайта
+        objMainPage.clickOrderButtonHeader(placeOrderButton); //Нажимаем кнопку Заказать в шапке сайта
 
         AboutTenantPage objOrderPage = new AboutTenantPage(driver);
         objOrderPage.waitForLoadTitleHeader(); //ждем когда загрузится заголовок на странице "Для кого самокат"

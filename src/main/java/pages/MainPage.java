@@ -9,6 +9,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static pages.constants.LocatorOrderButton.*;
+
 public class MainPage extends BasePage {
 
     //Заголовок Самокат на пару дней
@@ -16,6 +18,9 @@ public class MainPage extends BasePage {
 
     // Кнопка "Заказать" в верху страницы
     private final By orderButtonHeader = By.xpath(".//div[@class='Header_Nav__AGCXC']//button[@class='Button_Button__ra12g']");
+
+    // Кнопка "Заказать" в середине страницы
+    private final By orderButtonMiddle = By.xpath(".//div[@class='Home_FinishButton__1_cWm']/button");
 
     // Кнопка "Статус заказа"
     private final By dropdownTable = By.className("accordion");
@@ -38,9 +43,16 @@ public class MainPage extends BasePage {
                 .until(driver -> (driver.findElement(titleHeader).getText() != null));
     }
 
-    // Метод кликает на верхнюю кнопку "Заказать"
-    public void clickOrderButtonHeader() {
-        driver.findElement(orderButtonHeader).click();
+    // Метод кликает на кнопку "Заказать" в зависимости от тестового набора
+    public void clickOrderButtonHeader(Enum placeButton) {
+        if (placeButton == BUTTON_ORDER_HEADER) {
+            driver.findElement(orderButtonHeader).click();
+        } else if (placeButton == BUTTON_ORDER_MIDDLE) {
+            WebElement element = driver.findElement(orderButtonMiddle);
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
+            new WebDriverWait(driver, Duration.ofSeconds(3))
+                    .until(ExpectedConditions.elementToBeClickable(orderButtonMiddle)).click();
+        }
     }
 
     // Метод дожитается когда элемент будет кликабельным и нажимает на вопрос из выпадающего списка
